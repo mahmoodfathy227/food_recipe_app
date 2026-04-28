@@ -13,11 +13,12 @@ class App extends StatelessWidget {
   }
 
   Widget _buildMaterialApp(BuildContext context) {
+    debugPrint('[App] building MaterialApp with deep-orange theme');
     return MaterialApp.router(
       title: 'Bite & Time',
       debugShowCheckedModeBanner: false,
-      theme: buildLightTheme(primaryColorHex: '#6750A4'),
-      darkTheme: buildDarkTheme(primaryColorHex: '#6750A4'),
+      theme: buildLightTheme(primaryColorHex: '#EA580C'),
+      darkTheme: buildDarkTheme(primaryColorHex: '#EA580C'),
       themeMode: ThemeMode.system,
       routerConfig: appRouter,
       localizationsDelegates: context.localizationDelegates,
