@@ -52,6 +52,7 @@ class _HomePageState extends State<HomePage> {
           _DiscoverTab(onEnableReminders: _maybeScheduleReminders),
           _SearchTab(controller: _searchCtrl, debouncer: _debounce),
           const _FavoritesTab(),
+          const _AboutTab(),
         ],
       ),
       bottomNavigationBar: _BottomNavBar(
@@ -62,6 +63,7 @@ class _HomePageState extends State<HomePage> {
             context.read<FavoritesBloc>().add(const FavoritesLoadRequested());
             debugPrint('[HomePage] tab → favorites');
           }
+          debugPrint('[HomePage] tab changed to $i');
         },
       ),
     );
@@ -119,6 +121,11 @@ class _BottomNavBar extends StatelessWidget {
             icon: Icon(Icons.bookmark_border_rounded),
             selectedIcon: Icon(Icons.bookmark_rounded),
             label: 'Saved',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline_rounded),
+            selectedIcon: Icon(Icons.person_rounded),
+            label: 'About',
           ),
         ],
       ),
@@ -238,14 +245,6 @@ class _DiscoverScaffold extends StatelessWidget {
         // ── Content ───────────────────────────────────────────────
         SliverToBoxAdapter(
           child: _buildBody(context, state, onEnableReminders),
-        ),
-
-        // ── Developer card — always visible ───────────────────────
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 0),
-            child: const _DeveloperCard(),
-          ),
         ),
 
         SliverToBoxAdapter(child: SizedBox(height: 24.h)),
@@ -944,81 +943,196 @@ class _EmptyState extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Developer Card
+// About Tab
 // ─────────────────────────────────────────────────────────────────────────────
 
-class _DeveloperCard extends StatelessWidget {
-  const _DeveloperCard();
+class _AboutTab extends StatelessWidget {
+  const _AboutTab();
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('[_DeveloperCard] build');
+    debugPrint('[AboutTab] build');
     final cs = context.theme.colorScheme;
     final tt = context.theme.textTheme;
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            cs.primary.withValues(alpha: 0.10),
-            cs.primary.withValues(alpha: 0.04),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: cs.primary.withValues(alpha: 0.18),
-        ),
-      ),
-      child: Column(
-        children: [
-          // Avatar circle
-          Container(
-            width: 52.w,
-            height: 52.w,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [cs.primary, cs.primary.withValues(alpha: 0.65)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+    return Scaffold(
+      backgroundColor: cs.surface,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'About',
+                style: tt.titleLarge?.copyWith(fontWeight: FontWeight.w800),
               ),
-            ),
-            child: Center(
-              child: Text(
-                'MF',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1,
+              SizedBox(height: 32.h),
+
+              // ── Avatar ────────────────────────────────────────
+              Container(
+                width: 100.w,
+                height: 100.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [cs.primary, cs.primary.withValues(alpha: 0.6)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: cs.primary.withValues(alpha: 0.35),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    'MF',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 32.sp,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 2,
+                    ),
+                  ),
                 ),
               ),
+              SizedBox(height: 20.h),
+
+              // ── Name ──────────────────────────────────────────
+              Text(
+                'Mahmood Fathy',
+                style: tt.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: cs.onSurface,
+                ),
+              ),
+              SizedBox(height: 6.h),
+              Text(
+                'Flutter Developer',
+                style: tt.bodyMedium?.copyWith(
+                  color: cs.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 28.h),
+
+              // ── Contact cards ─────────────────────────────────
+              _AboutInfoCard(
+                icon: Icons.email_outlined,
+                title: 'Email',
+                value: 'mahmoodfathy246@gmail.com',
+                cs: cs,
+                tt: tt,
+              ),
+              SizedBox(height: 12.h),
+              _AboutInfoCard(
+                icon: Icons.phone_outlined,
+                title: 'Phone',
+                value: '+20 106 629 3631',
+                cs: cs,
+                tt: tt,
+              ),
+              SizedBox(height: 32.h),
+
+              // ── App info ──────────────────────────────────────
+              Divider(color: cs.outlineVariant, thickness: 1),
+              SizedBox(height: 20.h),
+              Text(
+                'About the App',
+                style: tt.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              SizedBox(height: 12.h),
+              Text(
+                'Bite & Time is a context-aware recipe discovery app built for the IVTEX Flutter Developer assignment. '
+                'It suggests recipes based on your location and time of day, works fully offline with SQLite, '
+                'and sends daily meal reminders at breakfast, lunch, and dinner.',
+                textAlign: TextAlign.center,
+                style: tt.bodyMedium?.copyWith(
+                  color: cs.onSurfaceVariant,
+                  height: 1.6,
+                ),
+              ),
+              SizedBox(height: 28.h),
+
+              // ── Tech stack chips ──────────────────────────────
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
+                alignment: WrapAlignment.center,
+                children: [
+                  'Flutter',
+                  'BLoC',
+                  'TheMealDB',
+                  'SQLite',
+                  'Geolocator',
+                  'Notifications',
+                  'GitHub Actions',
+                ].map((t) => _TechChip(label: t, cs: cs)).toList(),
+              ),
+              SizedBox(height: 32.h),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AboutInfoCard extends StatelessWidget {
+  const _AboutInfoCard({
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.cs,
+    required this.tt,
+  });
+  final IconData icon;
+  final String title;
+  final String value;
+  final ColorScheme cs;
+  final TextTheme tt;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        color: cs.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.5)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 42.w,
+            height: 42.w,
+            decoration: BoxDecoration(
+              color: cs.primary.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
+            child: Icon(icon, color: cs.primary, size: 20.sp),
           ),
-          SizedBox(height: 10.h),
-          Text(
-            'Coded by Mahmood Fathy',
-            style: tt.titleSmall?.copyWith(
-              fontWeight: FontWeight.w800,
-              color: cs.onSurface,
-            ),
-          ),
-          SizedBox(height: 10.h),
-          // Contact row – email
-          _ContactRow(
-            icon: Icons.email_outlined,
-            label: 'mahmoodfathy246@gmail.com',
-            color: cs.primary,
-          ),
-          SizedBox(height: 6.h),
-          // Contact row – phone
-          _ContactRow(
-            icon: Icons.phone_outlined,
-            label: '+20 106 629 3631',
-            color: cs.primary,
+          SizedBox(width: 14.w),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant),
+              ),
+              SizedBox(height: 2.h),
+              Text(
+                value,
+                style: tt.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: cs.onSurface,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -1026,32 +1140,29 @@ class _DeveloperCard extends StatelessWidget {
   }
 }
 
-class _ContactRow extends StatelessWidget {
-  const _ContactRow({
-    required this.icon,
-    required this.label,
-    required this.color,
-  });
-  final IconData icon;
+class _TechChip extends StatelessWidget {
+  const _TechChip({required this.label, required this.cs});
   final String label;
-  final Color color;
+  final ColorScheme cs;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 14.sp, color: color),
-        SizedBox(width: 6.w),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12.sp,
-            color: color,
-            fontWeight: FontWeight.w600,
-          ),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: cs.primary.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w600,
+          color: cs.primary,
         ),
-      ],
+      ),
     );
   }
 }
+
