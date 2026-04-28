@@ -240,7 +240,15 @@ class _DiscoverScaffold extends StatelessWidget {
           child: _buildBody(context, state, onEnableReminders),
         ),
 
-        SliverToBoxAdapter(child: SizedBox(height: 16.h)),
+        // ── Developer card — always visible ───────────────────────
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 0),
+            child: const _DeveloperCard(),
+          ),
+        ),
+
+        SliverToBoxAdapter(child: SizedBox(height: 24.h)),
       ],
     );
   }
@@ -359,9 +367,6 @@ Widget _buildBody(
             ),
           ),
         ],
-        SizedBox(height: 24.h),
-        const _DeveloperCard(),
-        SizedBox(height: 8.h),
       ],
     ),
   );
