@@ -104,7 +104,8 @@ class MealReminderService {
     String body,
   ) async {
     final next = _nextTime(hour, minute);
-    final android = AndroidNotificationDetails(
+    debugPrint('[MealReminderService] scheduling id=$id at $hour:$minute');
+    const android = AndroidNotificationDetails(
       _kChannel,
       'Meal inspiration',
       channelDescription: 'Meal nudges',
@@ -112,7 +113,7 @@ class MealReminderService {
       priority: Priority.defaultPriority,
     );
     const darwin = DarwinNotificationDetails(); // ignore: prefer_const_constructors
-    final details = NotificationDetails(
+    const details = NotificationDetails(
       android: android,
       iOS: darwin,
     );
