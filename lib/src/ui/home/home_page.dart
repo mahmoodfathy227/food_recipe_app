@@ -359,6 +359,9 @@ Widget _buildBody(
             ),
           ),
         ],
+        SizedBox(height: 24.h),
+        const _DeveloperCard(),
+        SizedBox(height: 8.h),
       ],
     ),
   );
@@ -931,6 +934,119 @@ class _EmptyState extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Developer Card
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _DeveloperCard extends StatelessWidget {
+  const _DeveloperCard();
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('[_DeveloperCard] build');
+    final cs = context.theme.colorScheme;
+    final tt = context.theme.textTheme;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            cs.primary.withValues(alpha: 0.10),
+            cs.primary.withValues(alpha: 0.04),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: cs.primary.withValues(alpha: 0.18),
+        ),
+      ),
+      child: Column(
+        children: [
+          // Avatar circle
+          Container(
+            width: 52.w,
+            height: 52.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [cs.primary, cs.primary.withValues(alpha: 0.65)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                'MF',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            'Coded by Mahmood Fathy',
+            style: tt.titleSmall?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: cs.onSurface,
+            ),
+          ),
+          SizedBox(height: 10.h),
+          // Contact row – email
+          _ContactRow(
+            icon: Icons.email_outlined,
+            label: 'mahmoodfathy246@gmail.com',
+            color: cs.primary,
+          ),
+          SizedBox(height: 6.h),
+          // Contact row – phone
+          _ContactRow(
+            icon: Icons.phone_outlined,
+            label: '+20 106 629 3631',
+            color: cs.primary,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ContactRow extends StatelessWidget {
+  const _ContactRow({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
+  final IconData icon;
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 14.sp, color: color),
+        SizedBox(width: 6.w),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: color,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 }
