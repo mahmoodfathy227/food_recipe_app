@@ -1024,14 +1024,16 @@ class _AboutTab extends StatelessWidget {
                 icon: Icons.email_outlined,
                 title: 'Email',
                 value: 'mahmoodfathy246@gmail.com',
+                url: 'mailto:mahmoodfathy246@gmail.com',
                 cs: cs,
                 tt: tt,
               ),
               SizedBox(height: 12.h),
               _AboutInfoCard(
-                icon: Icons.phone_outlined,
-                title: 'Phone',
+                icon: Icons.chat_rounded,
+                title: 'WhatsApp',
                 value: '+20 106 629 3631',
+                url: 'https://wa.me/201066293631',
                 cs: cs,
                 tt: tt,
               ),
@@ -1086,55 +1088,78 @@ class _AboutInfoCard extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.value,
+    required this.url,
     required this.cs,
     required this.tt,
   });
   final IconData icon;
   final String title;
   final String value;
+  final String url;
   final ColorScheme cs;
   final TextTheme tt;
 
+  Future<void> _launch() async {
+    debugPrint('[_AboutInfoCard] launch url=$url');
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 16.h),
-      decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withValues(alpha: 0.5),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: _launch,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.5)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 42.w,
-            height: 42.w,
-            decoration: BoxDecoration(
-              color: cs.primary.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Icon(icon, color: cs.primary, size: 20.sp),
+        child: Ink(
+          padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 16.h),
+          decoration: BoxDecoration(
+            color: cs.surfaceContainerHighest.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.5)),
           ),
-          SizedBox(width: 14.w),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(
-                title,
-                style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant),
-              ),
-              SizedBox(height: 2.h),
-              Text(
-                value,
-                style: tt.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: cs.onSurface,
+              Container(
+                width: 42.w,
+                height: 42.w,
+                decoration: BoxDecoration(
+                  color: cs.primary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
+                child: Icon(icon, color: cs.primary, size: 20.sp),
+              ),
+              SizedBox(width: 14.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      value,
+                      style: tt.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: cs.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.open_in_new_rounded,
+                size: 16.sp,
+                color: cs.onSurfaceVariant.withValues(alpha: 0.5),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
